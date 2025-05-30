@@ -6,7 +6,7 @@ import os
 
 def cargar_datos(path_banco, path_ventas):
     """
-    Carga los archivos CSV y maneja errores de lectura.
+    Carga archivos CSV
     """
     try:
         df_banco = pd.read_csv(
@@ -28,8 +28,7 @@ def cargar_datos(path_banco, path_ventas):
 
 def limpiar_datos(df, nombre_df):
     """
-    Limpia datos: elimina duplicados y registros nulos.
-    Redondea los importes para manejar centavos.
+    Limpieza Datos
     """
     df = df.dropna(subset=['idcuenta', 'importe', 'fecha'])
     df = df.drop_duplicates()
@@ -89,7 +88,7 @@ def conciliar(df_banco, df_ventas, tolerancia_horas=24):
 
 def generar_reporte(df_banco, df_ventas, conciliados, ventas_sin_depositar, depositos_sin_registro, dif_importe):
     """
-    Genera el reporte final en consola y exporta archivos CSV de resultados.
+    Genera reporte final y exporta archivos CSV de resultados.
     """
     total_banco = len(df_banco)
     total_ventas = len(df_ventas)
@@ -130,17 +129,17 @@ def main():
     path_banco = "datos/extracto_bancario.csv"
     path_ventas = "datos/ventas_sistema.csv"
 
-    # 1️⃣ Cargar datos
+    # Cargar datos
     df_banco, df_ventas = cargar_datos(path_banco, path_ventas)
 
-    # 2️⃣ Limpiar datos
+    # Limpiar datos
     df_banco = limpiar_datos(df_banco, "Banco")
     df_ventas = limpiar_datos(df_ventas, "Ventas")
 
-    # 3️⃣ Conciliación
+    # Conciliación
     conciliados, ventas_sin_depositar, depositos_sin_registro, dif_importe = conciliar(df_banco, df_ventas)
 
-    # 4️⃣ Reporte final
+    # Reporte final
     generar_reporte(df_banco, df_ventas, conciliados, ventas_sin_depositar, depositos_sin_registro, dif_importe)
 
 if __name__ == "__main__":
